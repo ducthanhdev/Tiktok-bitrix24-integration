@@ -10,6 +10,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { Lead } from './leads/lead.entity';
 import { Deal } from './deals/deal.entity';
 import { ConfigurationEntity } from './config/configuration.entity';
+import { WebhooksModule } from './webhooks/webhooks.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ConfigurationEntity } from './config/configuration.entity';
     DealsModule,
     ConfigModule,
     AnalyticsModule,
+    WebhooksModule,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({

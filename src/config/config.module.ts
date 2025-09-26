@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigurationEntity } from './configuration.entity';
+import { ConfigurationService } from './configuration.service';
+import { ConfigurationController } from './configuration.controller';
 
 @Module({
   imports: [
@@ -26,6 +30,10 @@ import * as Joi from 'joi';
         REDIS_PORT: Joi.number().optional(),
       }),
     }),
+    TypeOrmModule.forFeature([ConfigurationEntity]),
   ],
+  controllers: [ConfigurationController],
+  providers: [ConfigurationService],
+  exports: [ConfigurationService],
 })
 export class ConfigModule {}
