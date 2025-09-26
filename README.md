@@ -31,6 +31,27 @@
 $ npm install
 ```
 
+### Environment
+
+Create `.env` from example:
+
+```bash
+cp .env.example .env
+```
+
+Required variables:
+
+```
+NODE_ENV=development
+PORT=3000
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+DB_NAME=tiktok_bitrix
+TIKTOK_WEBHOOK_SECRET=changeme
+```
+
 ## Compile and run the project
 
 ```bash

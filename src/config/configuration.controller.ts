@@ -7,24 +7,24 @@ export class ConfigurationController {
 
   @Get('mappings')
   async getMappings() {
-    return this.configService.get('field_mapping');
+    return this.configService.get<Record<string, unknown>>('field_mapping');
   }
 
   @Put('mappings')
   @HttpCode(HttpStatus.NO_CONTENT)
   async putMappings(@Body() body: Record<string, unknown>) {
-    await this.configService.set('field_mapping', body as Record<string, unknown>);
+    await this.configService.set('field_mapping', body);
   }
 
   @Get('rules')
   async getRules() {
-    return this.configService.get('deal_rules');
+    return this.configService.get<Array<Record<string, unknown>>>('deal_rules');
   }
 
   @Put('rules')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async putRules(@Body() body: Record<string, unknown>) {
-    await this.configService.set('deal_rules', body as Record<string, unknown>);
+  async putRules(@Body() body: Array<Record<string, unknown>>) {
+    await this.configService.set('deal_rules', body);
   }
 }
 

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Lead } from '../leads/lead.entity';
 import { Deal } from '../deals/deal.entity';
 import { ConfigService } from '@nestjs/config';
+import { ConfigurationService } from '../config/configuration.service';
 import * as crypto from 'node:crypto';
 
 interface TiktokWebhookPayload {
@@ -24,6 +25,7 @@ export class WebhooksService {
     @InjectRepository(Lead) private readonly leadRepo: Repository<Lead>,
     @InjectRepository(Deal) private readonly dealRepo: Repository<Deal>,
     private readonly config: ConfigService,
+    private readonly configurationService: ConfigurationService,
   ) {}
 
   verifyTiktokSignature(rawBody: string, signature?: string): void {

@@ -10,13 +10,13 @@ export class ConfigurationService {
     private readonly configRepo: Repository<ConfigurationEntity>,
   ) {}
 
-  async get(key: string): Promise<Record<string, unknown>> {
+  async get<T = unknown>(key: string): Promise<T> {
     const row = await this.configRepo.findOne({ where: { key } });
     if (!row) throw new NotFoundException('Config not found');
-    return row.value as Record<string, unknown>;
+    return row.value as T;
   }
 
-  async set(key: string, value: Record<string, unknown>): Promise<void> {
+  async set(key: string, value: unknown): Promise<void> {
     const existing = await this.configRepo.findOne({ where: { key } });
     if (existing) {
       existing.value = value;

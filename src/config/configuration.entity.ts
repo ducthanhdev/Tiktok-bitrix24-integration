@@ -9,7 +9,7 @@ export class ConfigurationEntity {
   key!: string;
 
   @Column({ type: 'jsonb' })
-  value!: Record<string, unknown>;
+  value!: unknown;
 
   @UpdateDateColumn({ type: 'timestamp with time zone' })
   updated_at!: Date;
