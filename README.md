@@ -65,6 +65,23 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+### API base path
+
+- Global prefix: `/api/v1` cho các endpoint quản trị (`/leads`, `/deals`, `/config`, `/analytics`).
+- Webhooks & Docs giữ nguyên:
+  - `POST /webhooks/tiktok/leads`
+  - `POST /webhooks/bitrix24/deals`
+  - `GET /docs`
+
+Ví dụ:
+
+```
+GET /api/v1/leads?page=1&limit=10
+GET /api/v1/deals?status=open
+POST /api/v1/leads/:id/convert-to-deal
+GET /api/v1/config/mappings
+```
+
 ## Run tests
 
 ```bash

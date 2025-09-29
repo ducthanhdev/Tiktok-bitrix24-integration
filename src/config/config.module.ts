@@ -1,3 +1,4 @@
+
 import { Module } from '@nestjs/common';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
@@ -28,6 +29,9 @@ import { ConfigurationController } from './configuration.controller';
         // Optional Redis for later modules
         REDIS_HOST: Joi.string().hostname().optional(),
         REDIS_PORT: Joi.number().optional(),
+        // Bitrix24
+        BITRIX24_WEBHOOK_URL: Joi.string().uri().required(),
+        BITRIX24_API_TOKEN: Joi.string().optional(),
       }),
     }),
     TypeOrmModule.forFeature([ConfigurationEntity]),

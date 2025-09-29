@@ -11,6 +11,7 @@ import { Lead } from './leads/lead.entity';
 import { Deal } from './deals/deal.entity';
 import { ConfigurationEntity } from './config/configuration.entity';
 import { WebhooksModule } from './webhooks/webhooks.module';
+import { Bitrix24Module } from './bitrix24/bitrix24.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { WebhooksModule } from './webhooks/webhooks.module';
     ConfigModule,
     AnalyticsModule,
     WebhooksModule,
+    Bitrix24Module,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
