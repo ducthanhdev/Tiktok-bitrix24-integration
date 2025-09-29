@@ -3,9 +3,21 @@ import { AppModule } from './app.module';
 import * as express from 'express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { RequestMethod } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import { WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: WinstonModule.createLogger({
+      transports: [
+        new winston.transports.Console({
+          format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
+        }),
+      ],
+    }),
+  });
 
   app.use(
     express.json({
@@ -41,6 +53,14 @@ async function bootstrap() {
     const target = '/api/v1' + url;
     res.redirect(308, target);
   });
+
+  // Throttler guard is registered globally via APP_GUARD in AppModule
+
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: false,
+    transform: true,
+  }));
 
   await app.listen(process.env.PORT ?? 3000);
 }

@@ -5,9 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Lead } from './lead.entity';
 import { Deal } from '../deals/deal.entity';
 import { ConfigModule } from '../config/config.module';
+import { Bitrix24Module } from '../bitrix24/bitrix24.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Lead, Deal]), ConfigModule],
+  imports: [TypeOrmModule.forFeature([Lead, Deal]), ConfigModule, Bitrix24Module, NotificationsModule],
   controllers: [LeadsController],
   providers: [LeadsService]
 })

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LeadsModule } from './leads/leads.module';
@@ -12,7 +13,12 @@ import { Deal } from './deals/deal.entity';
 import { ConfigurationEntity } from './config/configuration.entity';
 import { WebhooksModule } from './webhooks/webhooks.module';
 import { Bitrix24Module } from './bitrix24/bitrix24.module';
-import { Bitrix24Module } from './bitrix24/bitrix24.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { BullModule } from '@nestjs/bullmq';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import { TerminusModule } from '@nestjs/terminus';
+import { QueuesModule } from './queues/queues.module';
 
 @Module({
   imports: [
@@ -22,7 +28,16 @@ import { Bitrix24Module } from './bitrix24/bitrix24.module';
     AnalyticsModule,
     WebhooksModule,
     Bitrix24Module,
-    Bitrix24Module,
+    NotificationsModule,
+    TerminusModule,
+    QueuesModule,
+    BullModule.forRoot({
+      connection: {
+        host: process.env.REDIS_HOST || 'localhost',
+        port: Number(process.env.REDIS_PORT || 6379),
+      },
+    }),
+    ThrottlerModule.forRoot([{ ttl: 60_000, limit: 120 }]),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
@@ -40,6 +55,9 @@ import { Bitrix24Module } from './bitrix24/bitrix24.module';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+  ],
 })
 export class AppModule {}

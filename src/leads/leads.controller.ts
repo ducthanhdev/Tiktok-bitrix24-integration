@@ -1,11 +1,17 @@
 import { Controller, Get, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { LeadsService } from './leads.service';
 
+@ApiTags('Leads')
 @Controller('leads')
 export class LeadsController {
   constructor(private readonly leadsService: LeadsService) {}
 
   @Get()
+  @ApiOperation({ summary: 'List leads' })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({ name: 'source', required: false, example: 'tiktok' })
   async list(
     @Query('page') page = '1',
     @Query('limit') limit = '10',
@@ -17,11 +23,13 @@ export class LeadsController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get lead by id' })
   async get(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.leadsService.getById(id);
   }
 
   @Post(':id/convert-to-deal')
+  @ApiOperation({ summary: 'Convert lead to deal (rule-based)' })
   async convert(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.leadsService.convertToDeal(id);
   }

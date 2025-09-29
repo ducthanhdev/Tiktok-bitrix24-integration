@@ -4,9 +4,10 @@ import { AnalyticsService } from './analytics.service.js';
 import { AnalyticsController } from './analytics.controller.js';
 import { Lead } from '../leads/lead.entity';
 import { Deal } from '../deals/deal.entity';
+import { ConfigModule } from '../config/config.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Lead, Deal])],
+  imports: [TypeOrmModule.forFeature([Lead, Deal]), ConfigModule],
   controllers: [AnalyticsController],
   providers: [AnalyticsService],
 })

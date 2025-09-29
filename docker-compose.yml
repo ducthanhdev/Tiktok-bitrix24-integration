@@ -1,0 +1,48 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16
+    container_name: ttb24-postgres
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-tiktok_bitrix}
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: ttb24-redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+
+  app:
+    build: .
+    container_name: ttb24-app
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_NAME: ${DB_NAME:-tiktok_bitrix}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      TIKTOK_WEBHOOK_SECRET: ${TIKTOK_WEBHOOK_SECRET:-changeme}
+      B24_BASE_URL: ${B24_BASE_URL:-}
+      B24_TOKEN: ${B24_TOKEN:-}
+      TIKTOK_CONV_URL: ${TIKTOK_CONV_URL:-}
+      TIKTOK_CONV_TOKEN: ${TIKTOK_CONV_TOKEN:-}
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
+
+

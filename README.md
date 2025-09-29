@@ -79,9 +79,12 @@ Ví dụ:
 
 ```
 GET /api/v1/leads?page=1&limit=10
-GET /api/v1/deals?status=open
+GET /api/v1/deals?status=open&assigned_to=user1&pipeline_id=1
 POST /api/v1/leads/:id/convert-to-deal
 GET /api/v1/config/mappings
+GET /api/v1/analytics/campaign-performance?date_range=30d
+GET /api/v1/analytics/reports/export?format=csv&date_range=30d
+GET /api/v1/analytics/reports/export.xlsx?date_range=30d
 ```
 
 ## Run tests

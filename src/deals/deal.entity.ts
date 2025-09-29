@@ -28,6 +28,12 @@ export class Deal {
   @Column({ type: 'int', default: 0 })
   probability!: number;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  assigned_to!: string | null;
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  pipeline_id!: string | null;
+
   @CreateDateColumn({ type: 'timestamp with time zone' })
   created_at!: Date;
 

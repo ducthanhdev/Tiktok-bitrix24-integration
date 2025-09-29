@@ -6,6 +6,9 @@ import { Deal } from '../deals/deal.entity';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationService } from '../config/configuration.service';
 import { Bitrix24Service } from '../bitrix24/bitrix24.service';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { QUEUE_B24_SYNC, QUEUE_TIKTOK_SYNC } from '../queues/queues.module';
 import * as crypto from 'node:crypto';
 
 interface TiktokWebhookPayload {
@@ -28,6 +31,8 @@ export class WebhooksService {
     private readonly config: ConfigService,
     private readonly configurationService: ConfigurationService,
     private readonly bitrix24: Bitrix24Service,
+    @InjectQueue(QUEUE_B24_SYNC) private readonly b24Queue: Queue,
+    @InjectQueue(QUEUE_TIKTOK_SYNC) private readonly tiktokQueue: Queue,
   ) {}
 
   verifyTiktokSignature(rawBody: string, signature?: string): void {
@@ -52,11 +57,13 @@ export class WebhooksService {
   }
 
   async handleTiktokLead(payload: TiktokWebhookPayload, raw: unknown): Promise<{ leadId: string }> {
+    const event = payload.event;
     const name = (payload.lead_data?.full_name as string | undefined) ?? 'Unknown';
     const email = this.normalizeEmail(payload.lead_data?.email as string | undefined);
     const phone = this.normalizePhone(payload.lead_data?.phone as string | undefined);
     const campaignId = payload.campaign?.campaign_id ?? null;
     const adId = payload.campaign?.ad_id ?? null;
+    const formId = payload.form?.form_id ?? null;
     const externalId = payload.event_id;
 
     // deduplicate by email/phone
@@ -69,7 +76,15 @@ export class WebhooksService {
       existing.name = existing.name || name;
       existing.campaign_id = campaignId ?? existing.campaign_id;
       existing.ad_id = adId ?? existing.ad_id;
+      existing.form_id = formId ?? existing.form_id;
       existing.raw_data = (raw as Record<string, unknown>) ?? existing.raw_data;
+      if (event === 'form.completed') {
+        existing.status = 'completed';
+        existing.score = Math.max(existing.score ?? 0, 50);
+      }
+      if (event === 'user.interaction') {
+        existing.score = (existing.score ?? 0) + 10;
+      }
       await this.leadRepo.save(existing);
       return { leadId: existing.id };
     }
@@ -82,14 +97,16 @@ export class WebhooksService {
       phone: phone ?? null,
       campaign_id: campaignId,
       ad_id: adId,
+      form_id: formId,
       raw_data: (raw as Record<string, unknown>) ?? null,
-      status: 'new',
+      status: event === 'form.completed' ? 'completed' : 'new',
+      score: event === 'user.interaction' ? 10 : 0,
     });
     const saved = await this.leadRepo.save(newLead);
 
-    // push to Bitrix24 (best-effort; consider queue in production)
+    // enqueue Bitrix24 upsert (retry via queue)
     try {
-      const bitrix = await this.bitrix24.upsertLeadFromTikTok({
+      await this.b24Queue.add('upsertLead', {
         external_id: externalId,
         name,
         email,
@@ -98,12 +115,14 @@ export class WebhooksService {
         ad_name: payload.campaign?.ad_name ?? null,
         ttclid: (payload.lead_data?.ttclid as string | undefined) ?? null,
         raw: raw as Record<string, unknown>,
-      });
-      if (bitrix.bitrixId) {
-        saved.bitrix24_id = bitrix.bitrixId;
-        await this.leadRepo.save(saved);
-      }
+      }, { attempts: 5, backoff: { type: 'exponential', delay: 2000 } });
     } catch {}
+    // Event-specific hooks
+    if (event === 'form.completed') {
+      // placeholder: can update status or log
+    } else if (event === 'user.interaction') {
+      // placeholder: can bump score or log
+    }
     return { leadId: saved.id };
   }
 }
