@@ -26,12 +26,16 @@ import { ConfigurationController } from './configuration.controller';
         DB_PASSWORD: Joi.string().allow('').required(),
         DB_NAME: Joi.string().required(),
 
+        // TikTok
+        TIKTOK_WEBHOOK_SECRET: Joi.string().optional(),
+
         // Optional Redis for later modules
         REDIS_HOST: Joi.string().hostname().optional(),
         REDIS_PORT: Joi.number().optional(),
-        // Bitrix24
-        BITRIX24_WEBHOOK_URL: Joi.string().uri().required(),
-        BITRIX24_API_TOKEN: Joi.string().optional(),
+
+        // Bitrix24 (axios client)
+        B24_BASE_URL: Joi.string().uri().optional(),
+        B24_TOKEN: Joi.string().optional(),
       }),
     }),
     TypeOrmModule.forFeature([ConfigurationEntity]),

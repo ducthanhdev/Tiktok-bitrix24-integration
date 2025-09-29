@@ -50,6 +50,8 @@ DB_USERNAME=postgres
 DB_PASSWORD=postgres
 DB_NAME=tiktok_bitrix
 TIKTOK_WEBHOOK_SECRET=changeme
+B24_BASE_URL=https://your-portal.bitrix24.com/rest/1/
+B24_TOKEN=your_token
 ```
 
 ## Compile and run the project

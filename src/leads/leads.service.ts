@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Lead } from './lead.entity';
 import { Deal } from '../deals/deal.entity';
 import { ConfigurationService } from '../config/configuration.service';
+import { Bitrix24Service } from '../bitrix24/bitrix24.service';
 
 @Injectable()
 export class LeadsService {
@@ -11,6 +12,7 @@ export class LeadsService {
     @InjectRepository(Lead) private readonly leadRepo: Repository<Lead>,
     @InjectRepository(Deal) private readonly dealRepo?: Repository<Deal>,
     private readonly configurationService?: ConfigurationService,
+    private readonly bitrix24Service?: Bitrix24Service,
   ) {}
 
   async list(params: { page: number; limit: number; source?: string }) {
@@ -60,6 +62,16 @@ export class LeadsService {
       probability,
     });
     const saved = await this.dealRepo.save(deal);
+
+    // best-effort sync to Bitrix24
+    if (lead.bitrix24_id && this.bitrix24Service) {
+      await this.bitrix24Service.createDealForLead({
+        leadBitrixId: lead.bitrix24_id,
+        title: saved.title,
+        stageId: saved.stage ?? 'NEW',
+        probability: saved.probability,
+      });
+    }
     return saved;
   }
 }

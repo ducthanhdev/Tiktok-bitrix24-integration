@@ -5,6 +5,7 @@ import { Lead } from '../leads/lead.entity';
 import { Deal } from '../deals/deal.entity';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationService } from '../config/configuration.service';
+import { Bitrix24Service } from '../bitrix24/bitrix24.service';
 import * as crypto from 'node:crypto';
 
 interface TiktokWebhookPayload {
@@ -26,6 +27,7 @@ export class WebhooksService {
     @InjectRepository(Deal) private readonly dealRepo: Repository<Deal>,
     private readonly config: ConfigService,
     private readonly configurationService: ConfigurationService,
+    private readonly bitrix24: Bitrix24Service,
   ) {}
 
   verifyTiktokSignature(rawBody: string, signature?: string): void {
@@ -84,6 +86,24 @@ export class WebhooksService {
       status: 'new',
     });
     const saved = await this.leadRepo.save(newLead);
+
+    // push to Bitrix24 (best-effort; consider queue in production)
+    try {
+      const bitrix = await this.bitrix24.upsertLeadFromTikTok({
+        external_id: externalId,
+        name,
+        email,
+        phone,
+        campaign_name: payload.campaign?.campaign_name ?? null,
+        ad_name: payload.campaign?.ad_name ?? null,
+        ttclid: (payload.lead_data?.ttclid as string | undefined) ?? null,
+        raw: raw as Record<string, unknown>,
+      });
+      if (bitrix.bitrixId) {
+        saved.bitrix24_id = bitrix.bitrixId;
+        await this.leadRepo.save(saved);
+      }
+    } catch {}
     return { leadId: saved.id };
   }
 }
