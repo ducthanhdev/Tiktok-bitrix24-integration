@@ -4,10 +4,16 @@ const axios = require('axios');
 const BASE_URL = 'http://localhost:3000';
 const SECRET = 'changeme';
 
+/**
+ * Generate HMAC-SHA256 signature for TikTok webhook verification
+ */
 function generateSignature(payload, secret) {
   return crypto.createHmac('sha256', secret).update(payload).digest('base64');
 }
 
+/**
+ * Complete API testing suite for TikTok-Bitrix24 Integration
+ */
 async function testComplete() {
   console.log('🚀 COMPLETE TESTING - TikTok-Bitrix24 Integration\n');
 

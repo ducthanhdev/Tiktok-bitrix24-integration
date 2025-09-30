@@ -49,7 +49,6 @@ import { QueuesModule } from './queues/queues.module';
         database: config.getOrThrow<string>('DB_NAME'),
         entities: [Lead, Deal, ConfigurationEntity],
         synchronize: true,
-        // For production use migrations instead of synchronize
         logging: ['error', 'warn'],
       }),
     }),

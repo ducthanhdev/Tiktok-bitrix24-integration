@@ -37,7 +37,7 @@ export class WebhooksService {
 
   verifyTiktokSignature(rawBody: string, signature?: string): void {
     const secret = this.config.get<string>('TIKTOK_WEBHOOK_SECRET');
-    if (!secret) return; // allow when not set (dev)
+    if (!secret) return;
     if (!signature) throw new UnauthorizedException('Missing TikTok-Signature');
     const computed = crypto.createHmac('sha256', secret).update(rawBody).digest('base64');
     if (computed !== signature) throw new UnauthorizedException('Invalid TikTok-Signature');

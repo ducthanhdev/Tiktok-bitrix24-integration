@@ -3,7 +3,6 @@ import { AppModule } from './app.module';
 import * as express from 'express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { RequestMethod } from '@nestjs/common';
-import { ThrottlerGuard } from '@nestjs/throttler';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { ValidationPipe } from '@nestjs/common';
@@ -44,7 +43,7 @@ async function bootstrap() {
     ],
   });
 
-  // Legacy redirects for GET requests without prefix (leads/deals/config/analytics)
+  // Legacy redirects for backward compatibility
   app.use((req: any, res: any, next: any) => {
     if (req.method !== 'GET') return next();
     const url: string = req.url || '';
@@ -54,8 +53,6 @@ async function bootstrap() {
     const target = '/api/v1' + url;
     res.redirect(308, target);
   });
-
-  // Throttler guard is registered globally via APP_GUARD in AppModule
 
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,

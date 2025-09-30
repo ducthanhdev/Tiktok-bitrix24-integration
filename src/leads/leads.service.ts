@@ -14,12 +14,12 @@ import { QUEUE_NOTIFY, QUEUE_TIKTOK_SYNC } from '../queues/queue.constants';
 export class LeadsService {
   constructor(
     @InjectRepository(Lead) private readonly leadRepo: Repository<Lead>,
-    @InjectRepository(Deal) private readonly dealRepo?: Repository<Deal>,
-    private readonly configurationService?: ConfigurationService,
-    private readonly bitrix24Service?: Bitrix24Service,
-    private readonly notifications?: NotificationsService,
-    @InjectQueue(QUEUE_NOTIFY) private readonly notifyQueue?: Queue,
-    @InjectQueue(QUEUE_TIKTOK_SYNC) private readonly tiktokQueue?: Queue,
+    @InjectRepository(Deal) private readonly dealRepo: Repository<Deal>,
+    private readonly configurationService: ConfigurationService,
+    private readonly bitrix24Service: Bitrix24Service,
+    private readonly notifications: NotificationsService,
+    @InjectQueue(QUEUE_NOTIFY) private readonly notifyQueue: Queue,
+    @InjectQueue(QUEUE_TIKTOK_SYNC) private readonly tiktokQueue: Queue,
   ) {}
 
   async list(params: { page: number; limit: number; source?: string }) {

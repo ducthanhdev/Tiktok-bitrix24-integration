@@ -1,141 +1,360 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# TikTok-Bitrix24 Integration API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+> **Modern NestJS application for automated lead generation and CRM integration**
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+[![NestJS](https://img.shields.io/badge/NestJS-11.0-red.svg)](https://nestjs.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue.svg)](https://postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://docker.com/)
 
-## Description
+## 🚀 Overview
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Automated lead collection from TikTok campaigns with intelligent Bitrix24 CRM integration, featuring real-time analytics, background processing, and comprehensive reporting.
 
-## Project setup
+### ✨ Key Features
 
-```bash
-$ npm install
+- **TikTok Lead Collection**: Secure webhook processing with signature verification
+- **Bitrix24 CRM Integration**: Automated lead/deal creation with field mapping
+- **Smart Analytics**: Conversion tracking, campaign performance, ROI metrics
+- **Background Processing**: Redis + BullMQ for async operations
+- **Real-time Notifications**: Slack/Email alerts for key events
+- **Data Export**: CSV/Excel reports with date filtering
+- **Production Ready**: Docker, health checks, rate limiting, logging
+
+## 🏗️ Architecture
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   TikTok Ads    │───▶│   Webhook API   │───▶│   PostgreSQL    │
+│   Campaigns     │    │   (NestJS)      │    │   Database     │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                │                        │
+                                ▼                        ▼
+                       ┌─────────────────┐    ┌─────────────────┐
+                       │   Bitrix24 CRM │    │   Redis Queue   │
+                       │   Integration  │    │   Background    │
+                       └─────────────────┘    └─────────────────┘
 ```
 
-### Environment
+## 🛠️ Tech Stack
 
-Create `.env` from example:
+- **Framework**: NestJS 11 + TypeScript 5.7
+- **Database**: PostgreSQL 16 + TypeORM
+- **Queue**: Redis + BullMQ
+- **Validation**: class-validator + class-transformer
+- **Documentation**: Swagger/OpenAPI
+- **Containerization**: Docker + Docker Compose
+- **Monitoring**: Winston logging + Health checks
+
+## 📋 Prerequisites
+
+- Node.js 20+
+- Docker & Docker Compose
+- PostgreSQL 16+ (or use Docker)
+- Redis 7+ (or use Docker)
+
+## 🚀 Quick Start
+
+### 1. Clone & Install
+
+```bash
+git clone <repository-url>
+cd tiktok-bitrix24-integration
+npm install
+```
+
+### 2. Environment Setup
 
 ```bash
 cp .env.example .env
 ```
 
-Required variables:
+Configure your environment variables:
 
-```
-NODE_ENV=development
-PORT=3000
+```env
+# Database
 DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
 DB_NAME=tiktok_bitrix
-TIKTOK_WEBHOOK_SECRET=changeme
+
+# TikTok Webhook
+TIKTOK_WEBHOOK_SECRET=your_secret_key
+
+# Bitrix24 CRM
 B24_BASE_URL=https://your-portal.bitrix24.com/rest/1/
-B24_TOKEN=your_token
+B24_TOKEN=your_access_token
+
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6379
+
+# Notifications (Optional)
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
 ```
 
-## Compile and run the project
+### 3. Docker Setup (Recommended)
 
 ```bash
-# development
-$ npm run start
+# Start all services
+docker compose up -d --build
 
-# watch mode
-$ npm run start:dev
+# Run database migrations
+docker compose exec app npm run db:migrate
 
-# production mode
-$ npm run start:prod
+# Seed initial data
+docker compose exec app npm run db:seed
 ```
 
-### API base path
-
-- Global prefix: `/api/v1` cho các endpoint quản trị (`/leads`, `/deals`, `/config`, `/analytics`).
-- Webhooks & Docs giữ nguyên:
-  - `POST /webhooks/tiktok/leads`
-  - `POST /webhooks/bitrix24/deals`
-  - `GET /docs`
-
-Ví dụ:
-
-```
-GET /api/v1/leads?page=1&limit=10
-GET /api/v1/deals?status=open&assigned_to=user1&pipeline_id=1
-POST /api/v1/leads/:id/convert-to-deal
-GET /api/v1/config/mappings
-GET /api/v1/analytics/campaign-performance?date_range=30d
-GET /api/v1/analytics/reports/export?format=csv&date_range=30d
-GET /api/v1/analytics/reports/export.xlsx?date_range=30d
-```
-
-## Run tests
+### 4. Manual Setup
 
 ```bash
-# unit tests
-$ npm run test
+# Start PostgreSQL & Redis
+# Then run migrations
+npm run db:migrate
+npm run db:seed
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# Start development server
+npm run start:dev
 ```
 
-## Deployment
+## 📚 API Documentation
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Base URLs
+- **API**: `http://localhost:3000/api/v1`
+- **Webhooks**: `http://localhost:3000/webhooks`
+- **Swagger UI**: `http://localhost:3000/docs`
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Core Endpoints
+
+#### 🎯 Lead Management
+```bash
+GET    /api/v1/leads                    # List leads with pagination
+GET    /api/v1/leads/:id               # Get lead details
+POST   /api/v1/leads/:id/convert-to-deal # Convert lead to deal
+```
+
+#### 💼 Deal Management
+```bash
+GET    /api/v1/deals                    # List deals with filters
+```
+
+#### ⚙️ Configuration
+```bash
+GET    /api/v1/config/mappings         # Get field mappings
+PUT    /api/v1/config/mappings         # Update field mappings
+GET    /api/v1/config/rules            # Get deal rules
+PUT    /api/v1/config/rules            # Update deal rules
+```
+
+#### 📊 Analytics & Reports
+```bash
+GET    /api/v1/analytics/conversion-rates      # Conversion metrics
+GET    /api/v1/analytics/campaign-performance  # Campaign stats
+GET    /api/v1/analytics/reports/export        # CSV export
+GET    /api/v1/analytics/reports/export.xlsx   # Excel export
+```
+
+#### 🔗 Webhooks
+```bash
+POST   /webhooks/tiktok/leads          # TikTok lead webhook
+POST   /webhooks/bitrix24/deals        # Bitrix24 deal webhook
+```
+
+## 🧪 Testing
+
+### Run Complete Test Suite
+```bash
+# Test all APIs and webhooks
+npm run test:complete
+
+# Individual test commands
+npm run test          # Unit tests
+npm run test:e2e      # E2E tests
+npm run test:cov      # Coverage report
+```
+
+### Manual Testing
+```bash
+# Health check
+curl http://localhost:3000/api/v1/health
+
+# List leads
+curl http://localhost:3000/api/v1/leads
+
+# Test TikTok webhook (with signature)
+curl -X POST http://localhost:3000/webhooks/tiktok/leads \
+  -H "Content-Type: application/json" \
+  -H "tiktok-signature: <generated_signature>" \
+  -d '{"event_id":"test_123","event":"lead.generate","timestamp":1709876543,"advertiser_id":"123","data":{"external_id":"test_lead","name":"John Doe","email":"john@example.com","phone":"+84901234567"}}'
+```
+
+## 🗄️ Database Schema
+
+### Core Tables
+
+#### `leads` - Lead Management
+```sql
+- id (UUID, Primary Key)
+- external_id (VARCHAR, Unique)
+- source (VARCHAR, Default: 'tiktok')
+- name, email, phone (VARCHAR)
+- campaign_id, ad_id, form_id (VARCHAR)
+- raw_data (JSONB)
+- bitrix24_id (INTEGER)
+- status (VARCHAR, Default: 'new')
+- score (INTEGER, Default: 0)
+- created_at, updated_at (TIMESTAMPTZ)
+```
+
+#### `deals` - Deal Management
+```sql
+- id (UUID, Primary Key)
+- lead_id (UUID, Foreign Key)
+- bitrix24_id (INTEGER)
+- title (VARCHAR)
+- amount (NUMERIC)
+- currency (VARCHAR, Default: 'VND')
+- stage, probability (VARCHAR, INTEGER)
+- assigned_to, pipeline_id (VARCHAR)
+- created_at, updated_at (TIMESTAMPTZ)
+```
+
+#### `configurations` - Dynamic Settings
+```sql
+- id (SERIAL, Primary Key)
+- key (VARCHAR, Unique)
+- value (JSONB)
+- updated_at (TIMESTAMPTZ)
+```
+
+## 🔧 Configuration
+
+### Field Mapping
+Configure how TikTok fields map to Bitrix24 fields:
+
+```json
+{
+  "name": "NAME",
+  "email": "EMAIL[0][VALUE]",
+  "phone": "PHONE[0][VALUE]",
+  "company": "COMPANY",
+  "source": "SOURCE",
+  "campaign_id": "UF_CRM_CAMPAIGN_ID"
+}
+```
+
+### Deal Rules
+Configure automatic deal creation rules:
+
+```json
+{
+  "default_stage": "NEW",
+  "default_probability": 10,
+  "default_pipeline_id": 1,
+  "auto_assign": true,
+  "rules": [
+    {
+      "condition": "score >= 80",
+      "stage": "QUALIFICATION",
+      "probability": 50,
+      "assigned_to": 1
+    }
+  ]
+}
+```
+
+## 🚀 Deployment
+
+### Production Docker Setup
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Build production image
+docker build -t tiktok-bitrix24-api .
+
+# Run with production config
+docker run -d \
+  --name tiktok-api \
+  -p 3000:3000 \
+  -e NODE_ENV=production \
+  -e DB_HOST=your-db-host \
+  -e B24_BASE_URL=your-bitrix24-url \
+  tiktok-bitrix24-api
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Environment Variables (Production)
 
-## Resources
+```env
+NODE_ENV=production
+PORT=3000
 
-Check out a few resources that may come in handy when working with NestJS:
+# Database
+DB_HOST=your-postgres-host
+DB_PORT=5432
+DB_USERNAME=your-username
+DB_PASSWORD=your-password
+DB_NAME=tiktok_bitrix
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Security
+TIKTOK_WEBHOOK_SECRET=your-secure-secret
 
-## Support
+# Bitrix24
+B24_BASE_URL=https://your-portal.bitrix24.com/rest/1/
+B24_TOKEN=your-access-token
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+# Redis
+REDIS_HOST=your-redis-host
+REDIS_PORT=6379
 
-## Stay in touch
+# Notifications
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 📊 Monitoring & Logs
 
-## License
+### Health Checks
+- **Endpoint**: `GET /api/v1/health`
+- **Database**: PostgreSQL connection status
+- **Redis**: Queue system status
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Logging
+- **Format**: JSON structured logs
+- **Levels**: error, warn, info, debug
+- **Transport**: Console (configurable for file/remote)
+
+### Metrics
+- Request/response times
+- Error rates
+- Queue processing times
+- Database query performance
+
+## 🔒 Security
+
+- **Webhook Verification**: HMAC-SHA256 signature validation
+- **Rate Limiting**: 120 requests/minute per IP
+- **Input Validation**: DTO validation with class-validator
+- **SQL Injection**: TypeORM parameterized queries
+- **CORS**: Configurable cross-origin policies
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- **Documentation**: [Swagger UI](http://localhost:3000/docs)
+- **Issues**: GitHub Issues
+- **Email**: support@example.com
+
+---
+
+**Built with ❤️ using NestJS, TypeScript, and modern web technologies**
