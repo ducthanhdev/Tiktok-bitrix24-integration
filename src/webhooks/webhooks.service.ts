@@ -8,7 +8,7 @@ import { ConfigurationService } from '../config/configuration.service';
 import { Bitrix24Service } from '../bitrix24/bitrix24.service';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { QUEUE_B24_SYNC, QUEUE_TIKTOK_SYNC } from '../queues/queues.module';
+import { QUEUE_B24_SYNC, QUEUE_TIKTOK_SYNC } from '../queues/queue.constants';
 import * as crypto from 'node:crypto';
 
 interface TiktokWebhookPayload {

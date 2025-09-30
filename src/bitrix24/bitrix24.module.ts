@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { HttpModule } from './http.module.js';
+import { HttpModule } from './http.module';
 import { Bitrix24Service } from './bitrix24.service';
 import { ConfigModule } from '../config/config.module';
 

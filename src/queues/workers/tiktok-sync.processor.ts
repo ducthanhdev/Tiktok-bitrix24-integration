@@ -1,5 +1,5 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { QUEUE_TIKTOK_SYNC } from '../queues.module';
+import { QUEUE_TIKTOK_SYNC } from '../queue.constants';
 import type { Job } from 'bullmq';
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';

@@ -1,5 +1,5 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { QUEUE_NOTIFY } from '../queues.module';
+import { QUEUE_NOTIFY } from '../queue.constants';
 import type { Job } from 'bullmq';
 import { Injectable } from '@nestjs/common';
 import { NotificationsService } from '../../notifications/notifications.service';

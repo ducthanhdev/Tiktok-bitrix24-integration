@@ -7,9 +7,10 @@ import { Lead } from '../leads/lead.entity';
 import { Deal } from '../deals/deal.entity';
 import { ConfigModule } from '../config/config.module';
 import { Bitrix24Module } from '../bitrix24/bitrix24.module';
+import { QueuesModule } from '../queues/queues.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Lead, Deal]), ConfigModule, Bitrix24Module],
+  imports: [TypeOrmModule.forFeature([Lead, Deal]), ConfigModule, Bitrix24Module, QueuesModule],
   controllers: [TiktokWebhooksController, BitrixWebhooksController],
   providers: [WebhooksService],
 })

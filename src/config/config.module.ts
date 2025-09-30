@@ -28,16 +28,16 @@ import { ConfigurationController } from './configuration.controller';
 
         // TikTok
         TIKTOK_WEBHOOK_SECRET: Joi.string().optional(),
-        TIKTOK_CONV_URL: Joi.string().uri().optional(),
-        TIKTOK_CONV_TOKEN: Joi.string().optional(),
+        TIKTOK_CONV_URL: Joi.string().uri().allow('').optional(),
+        TIKTOK_CONV_TOKEN: Joi.string().allow('').optional(),
 
         // Optional Redis for later modules
         REDIS_HOST: Joi.string().hostname().optional(),
         REDIS_PORT: Joi.number().optional(),
 
         // Bitrix24 (axios client)
-        B24_BASE_URL: Joi.string().uri().optional(),
-        B24_TOKEN: Joi.string().optional(),
+        B24_BASE_URL: Joi.string().uri().allow('').optional(),
+        B24_TOKEN: Joi.string().allow('').optional(),
 
         // Notifications (Slack)
         SLACK_WEBHOOK_URL: Joi.string().uri().optional(),

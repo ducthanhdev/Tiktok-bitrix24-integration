@@ -7,6 +7,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { ValidationPipe } from '@nestjs/common';
+import { GlobalHttpExceptionFilter } from './common/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -61,6 +62,7 @@ async function bootstrap() {
     forbidNonWhitelisted: false,
     transform: true,
   }));
+  app.useGlobalFilters(new GlobalHttpExceptionFilter());
 
   await app.listen(process.env.PORT ?? 3000);
 }

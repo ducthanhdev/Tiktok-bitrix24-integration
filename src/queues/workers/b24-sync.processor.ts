@@ -1,5 +1,5 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { QUEUE_B24_SYNC } from '../queues.module';
+import { QUEUE_B24_SYNC } from '../queue.constants';
 import type { Job } from 'bullmq';
 import { Injectable, Logger } from '@nestjs/common';
 import { Bitrix24Service } from '../../bitrix24/bitrix24.service';

@@ -8,7 +8,7 @@ import { Bitrix24Service } from '../bitrix24/bitrix24.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { QUEUE_NOTIFY, QUEUE_TIKTOK_SYNC } from '../queues/queues.module';
+import { QUEUE_NOTIFY, QUEUE_TIKTOK_SYNC } from '../queues/queue.constants';
 
 @Injectable()
 export class LeadsService {
